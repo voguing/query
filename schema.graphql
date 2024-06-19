@@ -8,26 +8,29 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
-  signupUser(data: UserCreateInput!): User!
+  createProduct(category: String!, description: String, image: String, title: String!): Product!
+  signupUser(name: String, password: String!, username: String!): User!
 }
 
-input PostCreateInput {
-  content: String
+type Product {
+  category: String!
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  image: String
+  status: String!
   title: String!
+  updatedAt: DateTime!
 }
 
-input PostOrderByUpdatedAtInput {
-  updatedAt: SortOrder!
+type ProductResult {
+  data: [Product]
+  total: Int
 }
 
 type Query {
-  getUsers(current: Int = 0, pageSize: Int = 20): [User!]!
+  getProducts(current: Int = 0, pageSize: Int = 20): ProductResult!
   users(current: Int = 0, pageSize: Int = 20): UserResult!
-}
-
-enum SortOrder {
-  asc
-  desc
 }
 
 type User {
@@ -39,18 +42,7 @@ type User {
   username: String!
 }
 
-input UserCreateInput {
-  name: String
-  password: String!
-  username: String!
-}
-
 type UserResult {
   data: [User]
   total: Int
-}
-
-input UserUniqueInput {
-  id: Int
-  username: String
 }
