@@ -2,16 +2,20 @@ import { intArg } from 'nexus'
 import { Context } from '../context'
 import { ObjectDefinitionBlock } from 'nexus/dist/core'
 
+const paginationArgs = {
+  pageSize: intArg({
+    default: 20,
+  }),
+  current: intArg({
+    default: 0,
+  }),
+}
+
 export const users = (t: ObjectDefinitionBlock<'Query'>) =>
   t.nonNull.field('users', {
     type: 'UserResult',
     args: {
-      pageSize: intArg({
-        default: 20,
-      }),
-      current: intArg({
-        default: 0,
-      }),
+      ...paginationArgs,
     },
     resolve: async (_parent, args, context: Context) => {
       const data = await context.prisma.user.findMany({
@@ -27,12 +31,7 @@ export const products = (t: ObjectDefinitionBlock<'Query'>) =>
   t.nonNull.field('getProducts', {
     type: 'ProductResult',
     args: {
-      pageSize: intArg({
-        default: 20,
-      }),
-      current: intArg({
-        default: 0,
-      }),
+      ...paginationArgs,
     },
     resolve: async (_parent, args, context: Context) => {
       console.log(args, 'args')
