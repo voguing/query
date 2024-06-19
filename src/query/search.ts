@@ -3,11 +3,11 @@ import { Context } from '../context'
 import { ObjectDefinitionBlock } from 'nexus/dist/core'
 
 const paginationArgs = {
-  pageSize: intArg({
-    default: 20,
-  }),
   current: intArg({
     default: 0,
+  }),
+  pageSize: intArg({
+    default: 20,
   }),
 }
 
