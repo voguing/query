@@ -7,14 +7,6 @@ import * as search from './query/search'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
-export const ProductResult = objectType({
-  name: 'ProductResult',
-  definition(t) {
-    t.list.field('data', { type: 'Product' })
-    t.int('total')
-  },
-})
-
 const Query = objectType({
   name: 'Query',
   definition(t) {
@@ -38,7 +30,6 @@ export const schema = makeSchema({
     DateTime,
     ...Object.values(model),
     ...Object.values(result),
-    ProductResult,
   ],
   outputs: {
     schema: __dirname + '/../schema.graphql',

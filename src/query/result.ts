@@ -7,3 +7,11 @@ export const UserResult = objectType({
     t.int('total')
   },
 })
+
+export const ProductResult = objectType({
+  name: 'ProductResult',
+  definition(t) {
+    t.list.field('data', { type: 'Product' })
+    t.int('total')
+  },
+})
