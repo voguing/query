@@ -1,36 +1,11 @@
-import { makeSchema, objectType, asNexusMethod } from 'nexus'
+import { makeSchema, asNexusMethod } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
-import * as result from './query/result'
-import * as model from './query/model'
-import * as create from './query/create'
-import * as search from './query/search'
+import * as query from './schema/index'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
-const Query = objectType({
-  name: 'Query',
-  definition(t) {
-    search.users(t)
-    search.products(t)
-  },
-})
-
-const Mutation = objectType({
-  name: 'Mutation',
-  definition(t) {
-    create.createProduct(t)
-    create.signupUser(t)
-  },
-})
-
 export const schema = makeSchema({
-  types: [
-    Query,
-    Mutation,
-    DateTime,
-    ...Object.values(model),
-    ...Object.values(result),
-  ],
+  types: [DateTime, query],
   outputs: {
     schema: __dirname + '/../schema.graphql',
     typegen: __dirname + '/generated/nexus.ts',

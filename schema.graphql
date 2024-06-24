@@ -29,7 +29,7 @@ type ProductResult {
 }
 
 type Query {
-  getProducts(current: Int = 0, pageSize: Int = 20): ProductResult!
+  products(current: Int = 0, pageSize: Int = 20): ProductResult!
   users(current: Int = 0, pageSize: Int = 20): UserResult!
 }
 
