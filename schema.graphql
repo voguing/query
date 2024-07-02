@@ -8,7 +8,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
-  createProduct(category: String!, description: String, image: String, title: String!): Product!
+  createProduct(category: String!, description: String, image: String, skus: [SkuCreateInput!]!, title: String!): Product!
   signupUser(name: String, password: String!, username: String!): User!
 }
 
@@ -18,7 +18,11 @@ type Product {
   description: String
   id: Int!
   image: String
+  maxPrice: Int
+  minPrice: Int
+  soldHc: Int
   status: String!
+  stock: Int
   title: String!
   updatedAt: DateTime!
 }
@@ -31,6 +35,13 @@ type ProductResult {
 type Query {
   products(current: Int = 0, pageSize: Int = 20): ProductResult!
   users(current: Int = 0, pageSize: Int = 20): UserResult!
+}
+
+input SkuCreateInput {
+  hc: Int!
+  name: String!
+  price: Int!
+  stock: Int!
 }
 
 type User {

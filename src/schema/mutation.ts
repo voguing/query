@@ -1,6 +1,5 @@
-import { nonNull, stringArg, objectType } from 'nexus'
+import { list, nonNull, objectType, stringArg } from 'nexus'
 import { Context } from '../context'
-import { ObjectDefinitionBlock } from 'nexus/dist/core'
 
 export const Mutation = objectType({
   name: 'Mutation',
@@ -10,8 +9,9 @@ export const Mutation = objectType({
       args: {
         title: nonNull(stringArg()),
         description: stringArg(),
-        image: stringArg(),
         category: nonNull(stringArg()),
+        image: stringArg(),
+        skus: nonNull(list(nonNull('SkuCreateInput'))),
       },
       resolve: (_, args, context: Context) => {
         return context.prisma.product.create({
@@ -21,6 +21,16 @@ export const Mutation = objectType({
             image: args.image,
             status: 'DRAFT',
             category: args.category as any,
+            skus: {
+              createMany: {
+                data: args.skus.map((sku) => ({
+                  name: sku.name,
+                  price: sku.price,
+                  stock: sku.stock,
+                  hc: sku.hc,
+                })),
+              },
+            },
           },
         })
       },

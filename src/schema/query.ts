@@ -1,6 +1,7 @@
+import { max, min } from 'lodash'
 import { intArg, objectType } from 'nexus'
-import { Context } from '../context'
 import { AllNexusOutputTypeDefs, GetGen, NexusMetaType } from 'nexus/dist/core'
+import { Context } from '../context'
 
 const paginationArgs = {
   current: intArg({
@@ -57,10 +58,29 @@ export const Query = objectType({
           orderBy: {
             createdAt: 'desc',
           },
+          include: {
+            skus: {
+              select: {
+                stock: true,
+                price: true,
+              },
+            },
+          },
         })
         const total = await context.prisma.product.count()
         return {
-          data,
+          data: data.map((product) => {
+            const minPrice = min(product.skus.map((sku) => sku.price))
+            const maxPrice = max(product.skus.map((sku) => sku.price))
+            return {
+              ...product,
+              stock: product.skus.reduce((acc, sku) => acc + sku.stock, 0),
+              minPrice,
+              maxPrice,
+              soldHc: 0,
+              skus: undefined,
+            }
+          }),
           total,
         }
       },
