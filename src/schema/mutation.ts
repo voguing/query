@@ -23,6 +23,7 @@ export const Mutation = objectType({
             category: args.category as any,
             skus: {
               createMany: {
+                // @ts-ignore
                 data: args.skus.map((sku) => ({
                   name: sku.name,
                   price: sku.price,

@@ -8,6 +8,7 @@ export const User = objectType({
     t.nonNull.string('username')
     t.string('phone')
     t.string('avatar')
+    // @ts-ignore
     t.nonNull.date('createdAt')
   },
 })
