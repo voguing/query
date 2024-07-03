@@ -4,7 +4,8 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY package*.json pnpm-lock.yaml* ./
-COPY prisma/schema* ./prisma/
+COPY prisma/* ./prisma/
+COPY . .
 
 ARG DATABASE_URL
 ENV DATABASE_URL "$DATABASE_URL"
@@ -12,18 +13,15 @@ ENV NODE_ENV "production"
 
 USER root
 
-RUN corepack enable pnpm \
-  && pnpm i --frozen-lockfile  \
-  && pnpm cache clean --force \
+RUN npm i -g --unsafe-perm prisma@latest && corepack enable pnpm \
+  && pnpm i \
   && chown -R node ./
 
-RUN pnpx prisma generate
+RUN prisma generate
 USER node
 
-RUN pnpm run build
-
-COPY ./dist .
+RUN npm run build
 
 EXPOSE 4000
 
-CMD ["pnpm","start"]
+CMD ["npm","start"]

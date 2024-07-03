@@ -3,8 +3,11 @@
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
     "lib": ["esnext"],
-    "strict": true,
+    "strict": true
   },
   "include": ["src/**/*"]
 }
