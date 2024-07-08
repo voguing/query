@@ -25,5 +25,5 @@ jobs:
 
       - name: 构建容器镜像
         run: |
-          image_name=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/voguexus:$(date +%s)
+          image_name=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/voguexus:latest
           docker build . --file Dockerfile --build-arg DATABASE_URL="$DATABASE_URL" --tag $image_name && docker push $image_name
