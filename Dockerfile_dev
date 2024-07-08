@@ -1,0 +1,23 @@
+FROM --platform=linux/arm64 node:20
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY package*.json pnpm-lock.yaml* ./
+COPY prisma/* ./prisma/
+COPY . .
+
+ENV NODE_ENV "development"
+
+USER root
+
+RUN npm config --global set registry https://registry.npmmirror.com
+RUN npm i -g --unsafe-perm prisma@latest --registry=https://registry.npmmirror.com
+RUN npm i -g pnpm
+RUN pnpm i
+RUN chown -R node ./
+
+RUN prisma generate
+USER node
+
+EXPOSE 4000
