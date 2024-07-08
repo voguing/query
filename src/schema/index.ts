@@ -1,4 +1,5 @@
 export * from './mutation'
+export * from './order'
 export * from './products'
 export * from './query'
 export * from './sku'

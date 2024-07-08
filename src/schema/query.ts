@@ -14,7 +14,7 @@ const paginationArgs = {
 
 const resultList: Array<
   GetGen<'allOutputTypes', string> | AllNexusOutputTypeDefs | NexusMetaType
-> = ['User', 'Product']
+> = ['User', 'Product', 'Order']
 
 export const results = resultList.map((result) => {
   return objectType({
@@ -79,6 +79,42 @@ export const Query = objectType({
               maxPrice,
               soldHc: 0,
               skus: undefined,
+            }
+          }),
+          total,
+        }
+      },
+    })
+    t.nonNull.field('orders', {
+      type: 'OrderResult',
+      args: {
+        ...paginationArgs,
+      },
+      resolve: async (_parent, args, context: Context) => {
+        const data = await context.prisma.order.findMany({
+          take: args.pageSize || undefined,
+          skip: (args.pageSize || 20) * (args.current || 0) || undefined,
+          orderBy: {
+            createdAt: 'desc',
+          },
+          include: {
+            sku: {
+              include: {
+                product: true,
+              },
+            },
+            user: true,
+          },
+        })
+        const total = await context.prisma.product.count()
+        return {
+          data: data.map((order) => {
+            const { sku } = order
+            const { product } = sku
+            return {
+              ...order,
+              product,
+              sku,
             }
           }),
           total,

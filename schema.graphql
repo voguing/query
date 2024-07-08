@@ -12,6 +12,25 @@ type Mutation {
   signupUser(name: String, password: String!, username: String!): User!
 }
 
+type Order {
+  amount: Float!
+  createdAt: DateTime!
+  id: Int!
+  orderNo: String!
+  paymentNo: String
+  product: Product!
+  sku: Sku!
+  skuId: Int!
+  status: String!
+  user: User!
+  userId: Int!
+}
+
+type OrderResult {
+  data: [Order]
+  total: Int
+}
+
 type Product {
   category: String!
   createdAt: DateTime!
@@ -33,8 +52,16 @@ type ProductResult {
 }
 
 type Query {
+  orders(current: Int = 0, pageSize: Int = 20): OrderResult!
   products(current: Int = 0, pageSize: Int = 20): ProductResult!
   users(current: Int = 0, pageSize: Int = 20): UserResult!
+}
+
+type Sku {
+  hc: Int!
+  name: String!
+  price: Int!
+  stock: Int!
 }
 
 input SkuCreateInput {
@@ -49,6 +76,7 @@ type User {
   createdAt: DateTime!
   id: Int!
   name: String
+  openid: String
   phone: String
   username: String!
 }
