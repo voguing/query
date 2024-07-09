@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String?
+  username      String         @unique
+  createdAt     DateTime       @default(now())
+  password      String
+  phone         String?        @unique
+  avatar        String?
+  openid        String?        @unique
+  notifications Notification[]
+  orders        Order[]
+  roles         Role[]         @relation("RoleToUser")
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[] @relation("RoleToUser")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+  status      Status
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  category    Category
+  skus        Sku[]
+}
+
+model Sku {
+  id        Int     @id @default(autoincrement())
+  price     Int
+  stock     Int
+  productId Int
+  name      String
+  hc        Int
+  orders    Order[]
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id                 Int                 @id @default(autoincrement())
+  orderNo            String              @unique
+  paymentNo          String?             @unique
+  amount             Float
+  userId             Int
+  createdAt          DateTime            @default(now())
+  skuId              Int
+  status             OrderStatus
+  notificationOrders NotificationOrder[]
+  sku                Sku                 @relation(fields: [skuId], references: [id])
+  user               User                @relation(fields: [userId], references: [id])
+}
+
+model NotificationOrder {
+  id            Int            @id @default(autoincrement())
+  title         String
+  createdAt     DateTime       @default(now())
+  orderId       Int?
+  notifications Notification[]
+  order         Order?         @relation(fields: [orderId], references: [id])
+}
+
+model Notification {
+  id                  Int                @id @default(autoincrement())
+  templateId          String
+  templateValues      String
+  status              String
+  createdAt           DateTime           @default(now())
+  userId              Int
+  notificationOrderId Int?
+  notificationOrder   NotificationOrder? @relation(fields: [notificationOrderId], references: [id])
+  user                User               @relation(fields: [userId], references: [id])
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Category {
+  BALL
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
