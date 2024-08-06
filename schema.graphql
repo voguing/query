@@ -78,7 +78,7 @@ type User {
   name: String
   openid: String
   phone: String
-  username: String!
+  username: String
 }
 
 type UserResult {

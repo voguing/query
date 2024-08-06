@@ -10,9 +10,9 @@ datasource db {
 model User {
   id            Int            @id @default(autoincrement())
   name          String?
-  username      String         @unique
+  username      String?        @unique
   createdAt     DateTime       @default(now())
-  password      String
+  password      String?
   phone         String?        @unique
   avatar        String?
   openid        String?        @unique
